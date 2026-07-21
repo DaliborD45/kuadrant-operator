@@ -419,7 +419,11 @@ test-unit: clean-cov generate fmt vet ## Run Unit tests.
 build: GIT_SHA=$(shell git rev-parse HEAD || echo "unknown")
 build: DIRTY=$(shell $(PROJECT_PATH)/utils/check-git-dirty.sh || echo "unknown")
 build: generate fmt vet ## Build manager binary.
-	go build -ldflags "-X main.version=v$(VERSION) -X main.gitSHA=${GIT_SHA} -X main.dirty=${DIRTY}" -o bin/manager cmd/main.go
+ifeq (true,$(DATA_RACE))
+	CGO_ENABLED=1 go build -race -a -ldflags "-X main.version=v$(VERSION) -X main.gitSHA=${GIT_SHA} -X main.dirty=${DIRTY}" -o bin/manager cmd/main.go
+else
+	CGO_ENABLED=0 go build -ldflags "-X main.version=v$(VERSION) -X main.gitSHA=${GIT_SHA} -X main.dirty=${DIRTY}" -o bin/manager cmd/main.go
+endif
 
 WASM_BIN_DIR := $(PROJECT_PATH)/bin/wasm
 WASM_BIN := $(WASM_BIN_DIR)/plugin.wasm
@@ -446,6 +450,7 @@ docker-build: ## Build docker image with the manager.
 		--build-arg GIT_SHA=$(GIT_SHA) \
 		--build-arg DIRTY=$(DIRTY) \
 		--build-arg VERSION=v$(VERSION) \
+		--build-arg DATA_RACE=$(DATA_RACE) \
 		--build-arg WITH_EXTENSIONS=$(WITH_EXTENSIONS) \
 		--build-arg WASM_SHIM_IMAGE=$(RELATED_IMAGE_WASMSHIM) \
 		--build-arg EXTRA_EXTENSIONS="$(EXTRA_EXTENSIONS)" \
