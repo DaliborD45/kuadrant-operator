@@ -224,8 +224,8 @@ metadata:
     capabilities: Basic Install
     categories: Integration & Delivery
     console.openshift.io/plugins: '["kuadrant-console-plugin"]'
-    containerImage: quay.io/kuadrant/kuadrant-operator:latest
-    createdAt: "2026-06-22T15:16:38Z"
+    containerImage: quay.io/ddetko/kuadrant-operator:latest
+    createdAt: "2026-07-29T13:27:40Z"
     description: A Kubernetes Operator to manage the lifecycle of the Kuadrant system
     operators.operatorframework.io/builder: operator-sdk-v1.33.0
     operators.operatorframework.io/project_layout: go.kubebuilder.io/v4
@@ -769,7 +769,7 @@ spec:
                   valueFrom:
                     fieldRef:
                       fieldPath: metadata.namespace
-                image: quay.io/kuadrant/kuadrant-operator:latest
+                image: quay.io/ddetko/kuadrant-operator:latest
                 livenessProbe:
                   httpGet:
                     path: /healthz
@@ -794,11 +794,11 @@ spec:
                   periodSeconds: 10
                 resources:
                   limits:
-                    cpu: 200m
-                    memory: 300Mi
+                    cpu: "1"
+                    memory: 2Gi
                   requests:
-                    cpu: 200m
-                    memory: 200Mi
+                    cpu: 500m
+                    memory: 1Gi
                 securityContext:
                   allowPrivilegeEscalation: false
                   capabilities:

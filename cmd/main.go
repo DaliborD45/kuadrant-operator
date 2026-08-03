@@ -273,6 +273,14 @@ func main() {
 		os.Exit(1)
 	}
 
+	for i := 0; i < 1000; i++ {
+		if err := controllers.Run(context.Background()); err != nil {
+			setupLog.Error(err, "race condition test failed", "iteration", i)
+			os.Exit(1)
+		}
+	}
+	setupLog.Info("race condition test completed 1000 iterations")
+
 	stateOfTheWorld, err := controllers.NewPolicyMachineryController(mgr, client, log.Log, opts...)
 	if err != nil {
 		setupLog.Error(err, "unable to setup policy controller")

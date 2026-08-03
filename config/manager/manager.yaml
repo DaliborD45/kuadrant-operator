@@ -78,11 +78,11 @@ spec:
             periodSeconds: 10
           resources:
             limits:
-              cpu: 200m
-              memory: 300Mi
+              cpu: "1"
+              memory: 2Gi
             requests:
-              cpu: 200m
-              memory: 200Mi
+              cpu: 500m
+              memory: 1Gi
           volumeMounts:
             - mountPath: /tmp/kuadrant
               name: extensions-socket-volume
